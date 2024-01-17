@@ -43,7 +43,7 @@ pipeline {
         stage('Deploy to Artifactory') {
             steps {
                 script {
-                    sh "jfrog rt docker-push ${DOCKER_IMAGE_NAME} ${JFROG_REPO_DOCKER} --build-name=Simple-Java-App --build-number=1 --access-token=${ARTIFACT_ACCESS_TOKEN}"
+                    sh "jfrog rt docker-push ${DOCKER_IMAGE_NAME} ${JFROG_REPO_DOCKER} --build-name=Simple-Java-App --build-number=1 --url=${JFROG_URL} --access-token=${ARTIFACT_ACCESS_TOKEN}"
             
                     // sh "jfrog rt upload --url ${JFROG_URL} --access-token ${ARTIFACT_ACCESS_TOKEN} target/*.jar ${JFROG_REPO_MAVEN}/"
                 }
