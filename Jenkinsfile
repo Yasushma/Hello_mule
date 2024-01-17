@@ -33,8 +33,8 @@ pipeline {
         stage('Build Docker Image') {    
             steps {
                 script {
-                    //sh "docker build -f Dockerfile-app -t ${IMAGE_NAME} ."
-                    docker.build("$DOCKER_IMAGE_NAME", '-f Dockerfile .')
+                    sh "docker build -f Dockerfile -t ${DOCKER_IMAGE_NAME} ."
+                    //docker.build("$DOCKER_IMAGE_NAME", '-f Dockerfile .')
                 }
             }
         }
