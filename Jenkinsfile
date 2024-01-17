@@ -36,8 +36,7 @@ pipeline {
                     //sh "docker build -f Dockerfile -t ${DOCKER_IMAGE_NAME} ."
                     //docker.build("$DOCKER_IMAGE_NAME", '-f Dockerfile .')
                    sh " docker build ~t https://joslin2024.jfrog.io/artifactory/docker-trial/hello-mule: $BUILD_NUMBER —-pull=true ."
-             sh" docker images
-                    "
+             sh " docker images "
                 }
             }
         }
