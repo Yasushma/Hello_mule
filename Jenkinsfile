@@ -8,7 +8,7 @@ pipeline {
         MAVEN_HOME = tool 'maven'
         ARTIFACT_ACCESS_TOKEN = credentials('artifact_acesstoken')
         JFROG_CREDENTIALS = credentials('jfrog')
-        JFROG_URL = 'https://hellomule21287.jfrog.io/artifactory/'
+        JFROG_URL = 'https://joslin2024.jfrog.io/artifactory'
         //JFROG_REPO_MAVEN = 'hellomule-libs-release-local'
         JFROG_REPO_DOCKER = 'docker-trial'
         DOCKER_IMAGE_NAME = 'hello-mule'
@@ -33,8 +33,11 @@ pipeline {
         stage('Build Docker Image') {    
             steps {
                 script {
-                    sh "docker build -f Dockerfile -t ${DOCKER_IMAGE_NAME} ."
+                    //sh "docker build -f Dockerfile -t ${DOCKER_IMAGE_NAME} ."
                     //docker.build("$DOCKER_IMAGE_NAME", '-f Dockerfile .')
+                   sh " docker build ~t https://joslin2024.jfrog.io/artifactory/docker-trial/hello-mule: $BUILD_NUMBER —-pull=true ."
+             sh" docker images
+                    "
                 }
             }
         }
