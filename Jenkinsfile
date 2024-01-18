@@ -34,16 +34,18 @@ pipeline {
                 script {
                     withCredentials([string(credentialsId: 'artifact_acesstoken', variable: 'ARTIFACT_ACCESS_TOKEN')]) {
                         // Build the Docker image
+			def localImage = 'simple_mule:latest'
+                       def remoteImage = 'joslin2024.jfrog.io/artifactory/muledocker-docker/simple_mule:latest'
                         sh "docker build -f Dockerfile -t ${DOCKER_IMAGE_NAME} ."
                         
-						sh "docker login -u sushma -p ${DOCKER_ACCESS_TOKEN} joslin2024.jfrog.io"
+			sh "docker login -u sushma -p ${DOCKER_ACCESS_TOKEN} joslin2024.jfrog.io"
                         // Tag the Docker image
-                        sh "docker tag ${DOCKER_IMAGE_NAME}:latest ${JFROG_URL}/${JFROG_REPO_DOCKER}/${DOCKER_IMAGE_NAME}:latest"
+                       sh "docker tag ${localImage} ${remoteImage}"
                         
                         // Push the Docker image to Artifactory
                         
                         
-                        sh "docker push ${JFROG_URL}/${JFROG_REPO_DOCKER}/${DOCKER_IMAGE_NAME}:latest"
+                        sh "docker push ${remoteImage}"
                           sh " docker images "
                     }
                     //sh "docker build -f Dockerfile -t ${DOCKER_IMAGE_NAME} ."
