@@ -11,7 +11,7 @@ pipeline {
         JFROG_URL = 'https://joslin2024.jfrog.io/artifactory'
         JFROG_REPO_DOCKER = 'muledocker-docker'
         DOCKER_IMAGE_NAME = 'simple_mule'
-		DOCKER_ACCESS_TOKEN = credentials('docker_jfrog_token')
+	DOCKER_ACCESS_TOKEN = credentials('docker_jfrog_token')
         }
 
     stages {
@@ -35,39 +35,20 @@ pipeline {
                     withCredentials([string(credentialsId: 'artifact_acesstoken', variable: 'ARTIFACT_ACCESS_TOKEN')]) {
                         // Build the Docker image
 			def localImage = 'simple_mule:latest'
-                       def remoteImage = 'joslin2024.jfrog.io/muledocker-docker/hello_mule:latest'
+                       def remoteImage = 'joslin2024.jfrog.io/muledocker-docker/simple_mule:latest'
                         sh "docker build -f Dockerfile -t ${DOCKER_IMAGE_NAME} ."
-                        
+                        //docker login
 			sh "docker login -u sushma -p ${DOCKER_ACCESS_TOKEN} joslin2024.jfrog.io"
                         // Tag the Docker image
                        sh "docker tag ${localImage} ${remoteImage}"
                         
                         // Push the Docker image to Artifactory
-                        
-                        
                         sh "docker push ${remoteImage}"
-                          sh " docker images "
-                    }
-                    //sh "docker build -f Dockerfile -t ${DOCKER_IMAGE_NAME} ."
-                    //docker.build("$DOCKER_IMAGE_NAME", '-f Dockerfile .')
-                   // sh 'docker login -usushma joslin2024.jfrog.io'
-                   //sh "docker build -t joslin2024.jfrog.io/artifactory/muledocker-docker-local/hello-mule:${BUILD_NUMBER} --pull ."
-
-                    
-           
+                        sh " docker images "
+		    }
                 }
             }
         }
         
-
-        
-        /*stage('Build Docker Image') {
-            steps {
-                script {
-                    // Promote the build to trigger Docker image build
-                    sh "jfrog rt build-promote hello-mule 1.0.0 --status=Staged"
-                }
-            }
-        }*/
     }
 }
