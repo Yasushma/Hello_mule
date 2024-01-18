@@ -35,7 +35,7 @@ pipeline {
                     withCredentials([string(credentialsId: 'artifact_acesstoken', variable: 'ARTIFACT_ACCESS_TOKEN')]) {
                         // Build the Docker image
 			def localImage = 'simple_mule:latest'
-                       def remoteImage = 'joslin2024.jfrog.io/artifactory/muledocker-docker/simple_mule:latest'
+                       def remoteImage = 'joslin2024.jfrog.io/muledocker-docker/hello_mule:latest'
                         sh "docker build -f Dockerfile -t ${DOCKER_IMAGE_NAME} ."
                         
 			sh "docker login -u sushma -p ${DOCKER_ACCESS_TOKEN} joslin2024.jfrog.io"
