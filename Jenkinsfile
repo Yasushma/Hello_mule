@@ -9,10 +9,9 @@ pipeline {
         ARTIFACT_ACCESS_TOKEN = credentials('artifact_acesstoken')
         JFROG_CREDENTIALS = credentials('jfrog')
         JFROG_URL = 'https://joslin2024.jfrog.io/artifactory'
-        //JFROG_REPO_MAVEN = 'hellomule-libs-release-local'
-        JFROG_REPO_DOCKER = 'docker-trial'
-        DOCKER_IMAGE_NAME = 'hello-mule'
-        //DOCKER_IMAGE_TAG = '1.0.0'
+        JFROG_REPO_DOCKER = 'muledocker-docker'
+        DOCKER_IMAGE_NAME = 'simple_mule'
+		DOCKER_ACCESS_TOKEN = credentials('docker_jfrog_token')
         }
 
     stages {
@@ -33,12 +32,27 @@ pipeline {
         stage('Build Docker Image') {    
             steps {
                 script {
+                    withCredentials([string(credentialsId: 'ARTIFACT_ACCESS_TOKEN', variable: 'ARTIFACT_ACCESS_TOKEN')]) {
+                        // Build the Docker image
+                        sh "docker build -f Dockerfile -t ${DOCKER_IMAGE_NAME} ."
+                        
+						sh "docker login -u sushma -p ${DOCKER_ACCESS_TOKEN} joslin2024.jfrog.io"
+                        // Tag the Docker image
+                        sh "docker tag ${DOCKER_IMAGE_NAME}:latest ${JFROG_URL}/${JFROG_REPO_DOCKER}/${DOCKER_IMAGE_NAME}:latest"
+                        
+                        // Push the Docker image to Artifactory
+                        
+                        
+                        sh "docker push ${JFROG_URL}/${JFROG_REPO_DOCKER}/${DOCKER_IMAGE_NAME}:latest"
+                          sh " docker images "
+                    }
                     //sh "docker build -f Dockerfile -t ${DOCKER_IMAGE_NAME} ."
                     //docker.build("$DOCKER_IMAGE_NAME", '-f Dockerfile .')
-                   sh "docker build -t joslin2024.jfrog.io/artifactory/docker-trial/hello-mule:${BUILD_NUMBER} -pull ."
+                   // sh 'docker login -usushma joslin2024.jfrog.io'
+                   //sh "docker build -t joslin2024.jfrog.io/artifactory/muledocker-docker-local/hello-mule:${BUILD_NUMBER} --pull ."
 
                     
-             sh " docker images "
+           
                 }
             }
         }
