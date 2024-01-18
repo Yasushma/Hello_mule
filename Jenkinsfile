@@ -32,7 +32,7 @@ pipeline {
         stage('Build Docker Image') {    
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'ARTIFACT_ACCESS_TOKEN', variable: 'ARTIFACT_ACCESS_TOKEN')]) {
+                    withCredentials([string(credentialsId: 'artifact_acesstoken', variable: 'ARTIFACT_ACCESS_TOKEN')]) {
                         // Build the Docker image
                         sh "docker build -f Dockerfile -t ${DOCKER_IMAGE_NAME} ."
                         
@@ -58,18 +58,7 @@ pipeline {
         }
         
 
-        stage('Deploy to Artifactory') {
-            steps {
-                script {
-                   withCredentials([string(credentialsId: 'ARTIFACT_ACCESS_TOKEN', variable: 'ARTIFACT_ACCESS_TOKEN')]) {
-    sh "jfrog rt docker-push hello-mule docker-trial --build-name=Simple-Java-App --build-number=1 --url=https://hellomule21287.jfrog.io/artifactory/ --access-token=\$ARTIFACT_ACCESS_TOKEN"
-}
-
-            
-                    // sh "jfrog rt upload --url ${JFROG_URL} --access-token ${ARTIFACT_ACCESS_TOKEN} target/*.jar ${JFROG_REPO_MAVEN}/"
-                }
-            }
-        }
+        
         /*stage('Build Docker Image') {
             steps {
                 script {
