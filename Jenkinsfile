@@ -8,7 +8,7 @@ pipeline {
     environment {
         MAVEN_HOME = tool 'maven'
         ARTIFACT_ACCESS_TOKEN = credentials('artifact_acesstoken')
-        JFROG_CREDENTIALS = credentials('jfrog')
+        //JFROG_CREDENTIALS = credentials('jfrog')
         JFROG_URL = 'https://joslin2024.jfrog.io/artifactory'
         JFROG_REPO_DOCKER = 'muledocker-docker'
         DOCKER_IMAGE_NAME = 'simple_mule'
