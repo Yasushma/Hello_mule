@@ -2,6 +2,7 @@ pipeline {
     agent any
     tools {
         maven 'maven' // Adjust the version as needed
+	jfrog 'jfrog'
     }
    
     environment {
