@@ -1,1 +1,56 @@
+pipeline {
+    agent any
+    tools {
+        maven 'maven' // Adjust the version as needed
+	//jfrog 'jfrog'
+    }
+   
+    environment {
+        MAVEN_HOME = tool 'maven'
+        ARTIFACT_ACCESS_TOKEN = credentials('artifact_acesstoken')
+        //JFROG_CREDENTIALS = credentials('jfrog')
+        JFROG_URL = 'https://joslin2024.jfrog.io/artifactory'
+        JFROG_REPO_DOCKER = 'muledocker-docker'
+        DOCKER_IMAGE_NAME = 'simple_mule'
+	DOCKER_ACCESS_TOKEN = credentials('docker_jfrog_token')
+        }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/Yasushma/Hello_mule.git']]])
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    sh "${MAVEN_HOME}/bin/mvn clean package"
+                     sh 'mv target/*.jar target/newapp.jar'
+                }
+            }
+        }
+        stage('Build Docker Image') {    
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'artifact_acesstoken', variable: 'ARTIFACT_ACCESS_TOKEN')]) {
+                        // Build the Docker image
+			def localImage = 'simple_mule:latest'
+                       def remoteImage = 'joslin2024.jfrog.io/muledocker-docker/simple_mule:latest'
+                        sh "docker build -f Dockerfile -t ${DOCKER_IMAGE_NAME} ."
+                        //docker login
+			sh "docker login -u sushma -p ${DOCKER_ACCESS_TOKEN} joslin2024.jfrog.io"
+                        // Tag the Docker image
+                       sh "docker tag ${localImage} ${remoteImage}"
+                        
+                        // Push the Docker image to Artifactory
+                        sh "docker push ${remoteImage}"
+                        sh " docker images "
+		    }
+                }
+            }
+        }
+        
+    }
+}
 
