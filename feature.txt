@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+    parameters {
+        choice choices: ['main', 'dev'], description: 'branch choice', name: 'branch'
+    }
+    stages {
+        stage("Checkout") {
+            steps {
+                script {
+                    // Determine the branch to checkout based on the parameter value
+                   def branchToCheckout = params.branch == 'main' ? 'main' :
+                      params.branch == 'dev' ? 'dev' :
+                      params.branch == 'feature' ? 'feature' 
+                    git branch: branchToCheckout, url: 'https://github.com/Yasushma/Hello_mule.git'
+                }
+            }
+        }
+        stage("just_select") {
+            steps {
+                echo "Choice: ${params.branch}"
+            }
+        }
+    }
+}
