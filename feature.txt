@@ -10,7 +10,9 @@ pipeline {
                     // Determine the branch to checkout based on the parameter value
                    def branchToCheckout = params.branch == 'main' ? 'main' :
                       params.branch == 'dev' ? 'dev' :
-                      params.branch == 'feature' ? 'feature' 
+                      params.branch == 'feature' ? 'feature' :
+                      'other'
+
                     git branch: branchToCheckout, url: 'https://github.com/Yasushma/Hello_mule.git'
                 }
             }
